@@ -16,11 +16,21 @@ export async function POST(req: NextRequest) {
       cookieStore.set('admin_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         path: '/',
+        maxAge: 60 * 60 * 2,
       });
 
-      return NextResponse.json({ success: true, message: 'Logged in successfully' });
+      const response = NextResponse.json({ success: true, message: 'Logged in successfully' });
+      response.cookies.set('admin_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 60 * 60 * 2,
+      });
+
+      return response;
     }
 
     return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });

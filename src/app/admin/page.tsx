@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, User, Lock, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -9,8 +9,26 @@ import Link from 'next/link';
 export default function AdminLoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const [status, setStatus] = useState<'idle' | 'checking' | 'authenticating' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'checking' | 'authenticating' | 'error'>('checking');
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const res = await fetch('/api/auth/check', { cache: 'no-store' });
+        const json = await res.json();
+        if (json.authenticated) {
+          router.replace('/admin/dashboard');
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setStatus('idle');
+      }
+    };
+    checkSession();
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -33,7 +51,7 @@ export default function AdminLoginPage() {
 
       const json = await res.json();
       if (json.success) {
-        router.push('/admin/dashboard');
+        window.location.href = '/admin/dashboard';
       } else {
         setStatus('error');
         setErrorMessage(json.message || 'Invalid credentials.');

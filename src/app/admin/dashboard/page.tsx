@@ -111,19 +111,24 @@ export default function AdminDashboard() {
   useEffect(() => {
     const initDashboard = async () => {
       try {
-        const authRes = await fetch('/api/auth/check');
+        const authRes = await fetch('/api/auth/check', { cache: 'no-store' });
         const authJson = await authRes.json();
         if (!authJson.authenticated) {
-          router.push('/admin');
+          router.replace('/admin');
           return;
         }
 
-        // Fetch dashboard records
-        await refreshAllData();
-        setLoading(false);
+        // Fetch dashboard records without redirecting on record fetch errors
+        try {
+          await refreshAllData();
+        } catch (dataErr) {
+          console.error('Failed to load dashboard data:', dataErr);
+        } finally {
+          setLoading(false);
+        }
       } catch (err) {
-        console.error(err);
-        router.push('/admin');
+        console.error('Auth verification error:', err);
+        router.replace('/admin');
       }
     };
     initDashboard();
