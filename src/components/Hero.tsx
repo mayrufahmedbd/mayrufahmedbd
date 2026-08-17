@@ -43,7 +43,7 @@ export default function Hero({ data }: HeroProps) {
           </span>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-            Hi, I'm{' '}
+            Hi, I&apos;m{' '}
             <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
               {data?.name || 'Mayruf Ahmed'}
             </span>

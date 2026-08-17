@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
-import { Sun, Moon, Menu, X, ShieldAlert } from 'lucide-react';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 
 const navItems = [
   { name: 'Home', href: '/' },

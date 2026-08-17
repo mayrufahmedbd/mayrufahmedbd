@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shield, Cpu, Code2, Database, Globe2, Terminal, Server, Key, GitBranch, Layers, Box } from 'lucide-react';
+import { Shield, Code2, Database, Globe2, Terminal, Server, Key, GitBranch, Layers, Box } from 'lucide-react';
 
 const techItems = [
   { name: 'JavaScript', icon: <Code2 size={16} className="text-yellow-500" /> },

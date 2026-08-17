@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Shield, ArrowRight } from 'lucide-react';
+import { Terminal, ArrowRight } from 'lucide-react';
 
 interface HistoryLine {
   text: string;

@@ -91,7 +91,7 @@ export default function Contact({ aboutData }: ContactProps) {
           {/* Left panel: Info & Socials */}
           <div className="lg:col-span-5 flex flex-col gap-8">
             <div className="glass-panel p-8 rounded-3xl flex flex-col gap-6 shadow-md border border-card-border/80">
-              <h3 className="text-2xl font-bold tracking-tight">Let's Connect</h3>
+              <h3 className="text-2xl font-bold tracking-tight">Let&apos;s Connect</h3>
               <p className="text-sm sm:text-base text-text-muted leading-relaxed">
                 I am always open to discussing new web architectures, cyber threats, code reviews, or football. Feel free to shoot a message!
               </p>

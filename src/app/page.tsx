@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Shield, Cpu, Terminal, Activity, Database, Lock, Binary, Zap } from 'lucide-react';
+import { ArrowRight, Shield, Terminal, Lock, Binary } from 'lucide-react';
 import dbConnect from '@/lib/dbConnect';
 import AboutModel from '@/models/About';
 import { seedDatabase } from '@/lib/seed';
@@ -274,10 +274,10 @@ export default async function HomePage() {
               Get In Touch
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent">
-              Let's Collaborate On Your Next Project
+              Let&apos;s Collaborate On Your Next Project
             </h2>
             <p className="text-base text-text-muted max-w-lg leading-relaxed">
-              Whether you have a web application idea, security questions, or just want to connect, feel free to drop me a line. I'll get back to you as soon as possible!
+              Whether you have a web application idea, security questions, or just want to connect, feel free to drop me a line. I&apos;ll get back to you as soon as possible!
             </p>
             <Link
               href="/contact"
