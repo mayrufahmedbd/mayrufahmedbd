@@ -9,26 +9,27 @@ import Link from 'next/link';
 export default function AdminLoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({ username: '', password: '' });
-  const [status, setStatus] = useState<'idle' | 'checking' | 'authenticating' | 'error'>('checking');
+  const [status, setStatus] = useState<'idle' | 'checking' | 'authenticating' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
+    let isMounted = true;
     const checkSession = async () => {
       try {
         const res = await fetch('/api/auth/check', { cache: 'no-store' });
         const json = await res.json();
-        if (json.authenticated) {
+        if (json.authenticated && isMounted) {
           router.replace('/admin/dashboard');
-          return;
         }
       } catch (err) {
         console.error(err);
-      } finally {
-        setStatus('idle');
       }
     };
     checkSession();
-  }, [router]);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
