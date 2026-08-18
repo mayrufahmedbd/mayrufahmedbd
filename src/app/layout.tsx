@@ -34,7 +34,8 @@ export const metadata: Metadata = {
   creator: 'Mayruf Ahmed',
   manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/logo.png',
+    apple: '/logo.png',
   },
 };
 

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 import { Sun, Moon, Menu, X } from 'lucide-react';
@@ -50,17 +51,23 @@ export default function Navbar() {
       </div>
 
       <nav
-        className={`fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 rounded-2xl transition-all duration-300 ${
-          isScrolled
+        className={`fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 rounded-2xl transition-all duration-300 ${isScrolled
             ? 'glass-panel py-3 shadow-lg'
             : 'bg-transparent py-5 border-b border-transparent'
-        }`}
+          }`}
       >
         <div className="px-6 flex items-center justify-between">
           {/* Logo / Name */}
           <Link href="/" className="text-xl font-bold tracking-wider flex items-center gap-2">
-            <span className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent">
-              MAYRUF
+            <Image 
+              src="/logo.png" 
+              alt="Logo" 
+              width={32} 
+              height={32} 
+              className="w-8 h-8 object-contain" 
+            />
+            <span className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent whitespace-nowrap">
+              Mayruf Ahmed
             </span>
             <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 border border-primary-main/30 rounded text-primary-main bg-primary-main/10">
               DevSec
@@ -75,9 +82,8 @@ export default function Navbar() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`text-sm font-medium transition-colors duration-200 ${
-                    isActive ? 'text-primary-main font-bold border-b border-primary-main' : 'text-text-base hover:text-primary-main'
-                  }`}
+                  className={`text-sm font-medium transition-colors duration-200 ${isActive ? 'text-primary-main font-bold border-b border-primary-main' : 'text-text-base hover:text-primary-main'
+                    }`}
                 >
                   {item.name}
                 </Link>
@@ -117,9 +123,8 @@ export default function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`text-base font-medium px-3 py-2 rounded-lg transition-all duration-200 ${
-                    isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'hover:bg-primary-main/5 text-text-base hover:text-primary-main'
-                  }`}
+                  className={`text-base font-medium px-3 py-2 rounded-lg transition-all duration-200 ${isActive ? 'bg-primary-main/10 text-primary-main font-bold' : 'hover:bg-primary-main/5 text-text-base hover:text-primary-main'
+                    }`}
                 >
                   {item.name}
                 </Link>

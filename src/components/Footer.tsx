@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Github, Linkedin, Facebook, Twitter, Eye, Server, Shield, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
@@ -81,9 +82,16 @@ export default function Footer() {
         <div className="md:col-span-5 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <Link href="/" className="text-lg font-black tracking-widest font-mono group flex items-center gap-2 w-fit">
+              <Image 
+                src="/logo.png" 
+                alt="Logo" 
+                width={32} 
+                height={32} 
+                className="w-8 h-8 object-contain" 
+              />
               <span className="text-primary-main">{`//`}</span>
-              <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
-                MAYRUF.AHMED
+              <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity whitespace-nowrap">
+                Mayruf Ahmed
               </span>
             </Link>
             <p className="text-xs text-text-muted leading-relaxed max-w-sm">
