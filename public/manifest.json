@@ -1,22 +1,29 @@
 {
-  "name": "Mayruf Ahmed - Web Developer Portfolio",
+  "name": "Mayruf Ahmed – Web Designer & Developer from Sylhet",
   "short_name": "Mayruf Ahmed",
-  "description": "Personal Portfolio Website of Mayruf Ahmed - Developer & Cybersecurity Enthusiast.",
+  "description": "Portfolio of Mayruf Ahmed – Professional Web Designer, Web Developer & Cybersecurity Enthusiast from Sylhet, Bangladesh.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#030712",
   "theme_color": "#030712",
+  "lang": "en",
+  "categories": ["portfolio", "technology", "web design"],
   "icons": [
     {
-      "src": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=192",
+      "src": "/logo.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=512",
+      "src": "/logo.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

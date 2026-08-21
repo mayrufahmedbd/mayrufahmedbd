@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import dbConnect from '@/lib/dbConnect';
 import AboutModel from '@/models/About';
 import TimelineItemModel from '@/models/TimelineItem';
@@ -13,6 +14,34 @@ import Interests from '@/components/Interests';
 import Activities from '@/components/Activities';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'About Mayruf Ahmed – Web Designer & Developer from Sylhet',
+  description:
+    'Learn about Mayruf Ahmed, a professional web designer and web developer from Sylhet, Bangladesh. Discover his skills, career timeline, and passion for modern web development and cybersecurity.',
+  keywords: [
+    'about Mayruf Ahmed',
+    'Mayruf Ahmed biography',
+    'Mayruf Ahmed skills',
+    'web designer Sylhet',
+    'web developer Sylhet',
+    'Sylheti web designer',
+    'Bangladeshi web developer',
+    'Mayruf Ahmed about',
+    'Mayruf portfolio',
+  ],
+  alternates: {
+    canonical: 'https://www.mayrufahmedbd.com/about',
+  },
+  openGraph: {
+    title: 'About Mayruf Ahmed – Web Designer & Developer from Sylhet',
+    description:
+      'Mayruf Ahmed is a professional web designer & developer from Sylhet, Bangladesh. Explore his skills, journey, and experience.',
+    url: 'https://www.mayrufahmedbd.com/about',
+    type: 'profile',
+  },
+};
+
 
 async function getAboutPageData() {
   await dbConnect();

@@ -1,9 +1,37 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import dbConnect from '@/lib/dbConnect';
 import ProjectModel from '@/models/Project';
 import ProjectsClientList from '@/components/ProjectsClientList';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Projects by Mayruf Ahmed – Web Design & Development Portfolio',
+  description:
+    'Explore web design and development projects by Mayruf Ahmed from Sylhet, Bangladesh. Full-stack apps, Next.js projects, cybersecurity tools, and more.',
+  keywords: [
+    'Mayruf Ahmed projects',
+    'web design portfolio Sylhet',
+    'web developer portfolio Bangladesh',
+    'Next.js projects',
+    'Mayruf Ahmed portfolio',
+    'web design projects',
+    'full stack projects',
+    'Sylheti developer portfolio',
+  ],
+  alternates: {
+    canonical: 'https://www.mayrufahmedbd.com/projects',
+  },
+  openGraph: {
+    title: 'Projects by Mayruf Ahmed – Web Design & Development Portfolio',
+    description:
+      'Browse all web design and development projects built by Mayruf Ahmed, a web designer from Sylhet, Bangladesh.',
+    url: 'https://www.mayrufahmedbd.com/projects',
+    type: 'website',
+  },
+};
+
 
 async function getProjects() {
   await dbConnect();

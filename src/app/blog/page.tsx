@@ -1,9 +1,37 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import dbConnect from '@/lib/dbConnect';
 import BlogModel from '@/models/Blog';
 import BlogClientList from '@/components/BlogClientList';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Blog by Mayruf Ahmed – Web Design, Development & Cybersecurity Articles',
+  description:
+    'Read articles, tutorials, and insights on web design, web development, Next.js, and cybersecurity by Mayruf Ahmed – a web designer and developer from Sylhet, Bangladesh.',
+  keywords: [
+    'Mayruf Ahmed blog',
+    'web design blog',
+    'web development blog',
+    'Next.js tutorials',
+    'cybersecurity blog',
+    'Mayruf Ahmed articles',
+    'Sylhet web designer blog',
+    'web developer blog Bangladesh',
+  ],
+  alternates: {
+    canonical: 'https://www.mayrufahmedbd.com/blog',
+  },
+  openGraph: {
+    title: 'Blog by Mayruf Ahmed – Web Design & Development Articles',
+    description:
+      'Web design, development and cybersecurity blog by Mayruf Ahmed from Sylhet, Bangladesh.',
+    url: 'https://www.mayrufahmedbd.com/blog',
+    type: 'website',
+  },
+};
+
 
 async function getBlogs() {
   await dbConnect();

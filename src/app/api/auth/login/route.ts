@@ -1,16 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { signToken } from '@/lib/auth';
+import dbConnect from '@/lib/dbConnect';
+import AdminModel from '@/models/Admin';
 
 export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
 
-    const expectedUsername = process.env.ADMIN_USERNAME || 'admin';
-    const expectedPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    // Connect to database and look up the admin by username + plain-text password
+    await dbConnect();
+    const admin = await AdminModel.findOne({ username, password });
 
-    if (username === expectedUsername && password === expectedPassword) {
-      const token = await signToken({ username });
+    if (admin) {
+      const token = await signToken({ username: admin.username });
 
       const cookieStore = await cookies();
       cookieStore.set('admin_token', token, {
