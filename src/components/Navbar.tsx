@@ -66,9 +66,9 @@ export default function Navbar() {
               height={32} 
               className="w-8 h-8 object-contain" 
             />
-            <span className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent whitespace-nowrap">
+            {/* <span className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent whitespace-nowrap">
               Mayruf Ahmed
-            </span>
+            </span> */}
             <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 border border-primary-main/30 rounded text-primary-main bg-primary-main/10">
               DevSec
             </span>

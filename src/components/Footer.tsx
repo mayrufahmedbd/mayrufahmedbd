@@ -89,10 +89,10 @@ export default function Footer() {
                 height={32} 
                 className="w-8 h-8 object-contain" 
               />
-              <span className="text-primary-main">{`//`}</span>
-              <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity whitespace-nowrap">
+              {/* <span className="text-primary-main">{`//`}</span> */}
+              {/* <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500 bg-clip-text text-transparent group-hover:opacity-80 transition-opacity whitespace-nowrap">
                 Mayruf Ahmed
-              </span>
+              </span> */}
             </Link>
             <p className="text-xs text-text-muted leading-relaxed max-w-sm">
               Engineering high-performance web systems, hardened API services, and zero-trust serverless network nodes.
