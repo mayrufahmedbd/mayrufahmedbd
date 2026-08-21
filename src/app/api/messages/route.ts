@@ -23,13 +23,18 @@ export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     const body = await req.json();
-    const { name, email, message } = body;
+    const { name, phone, email, topic, message } = body;
 
-    if (!name || !email || !message) {
-      return NextResponse.json({ success: false, message: 'Missing fields' }, { status: 400 });
+    if (!name || !phone || !email || !topic || !message) {
+      return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 });
     }
 
-    const newMessage = await Message.create({ name, email, message });
+    const validTopics = ['programming', 'cybersecurity', 'general', 'web-design', 'other'];
+    if (!validTopics.includes(topic)) {
+      return NextResponse.json({ success: false, message: 'Invalid topic selected' }, { status: 400 });
+    }
+
+    const newMessage = await Message.create({ name, phone, email, topic, message });
     return NextResponse.json({ success: true, data: newMessage, message: 'Message sent successfully!' });
   } catch (error: unknown) {
     console.error('Failed to save message:', error);

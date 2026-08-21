@@ -2,7 +2,12 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Github, Linkedin, Facebook, Twitter, Mail, MapPin, CheckCircle, AlertCircle, Phone } from 'lucide-react';
+import {
+  Send, Github, Linkedin, Facebook, Twitter,
+  Mail, MapPin, CheckCircle, AlertCircle, Phone,
+  Code2, ShieldCheck, Info, Palette, HelpCircle,
+  ChevronDown,
+} from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface ContactProps {
@@ -17,13 +22,54 @@ interface ContactProps {
   };
 }
 
+type Topic = 'programming' | 'cybersecurity' | 'general' | 'web-design' | 'other';
+
+const TOPICS: { value: Topic; label: string; icon: React.ReactNode; color: string }[] = [
+  {
+    value: 'programming',
+    label: 'Programming / Development',
+    icon: <Code2 size={15} />,
+    color: 'text-blue-400',
+  },
+  {
+    value: 'cybersecurity',
+    label: 'Cybersecurity',
+    icon: <ShieldCheck size={15} />,
+    color: 'text-emerald-400',
+  },
+  {
+    value: 'web-design',
+    label: 'Web Design',
+    icon: <Palette size={15} />,
+    color: 'text-purple-400',
+  },
+  {
+    value: 'general',
+    label: 'General Information',
+    icon: <Info size={15} />,
+    color: 'text-yellow-400',
+  },
+  {
+    value: 'other',
+    label: 'Other',
+    icon: <HelpCircle size={15} />,
+    color: 'text-text-muted',
+  },
+];
+
+const inputClass =
+  'w-full px-4 py-3 rounded-xl border border-card-border bg-input-bg text-text-base placeholder:text-text-muted/50 focus:border-primary-main focus:outline-none focus:ring-2 focus:ring-primary-main/10 transition-all duration-200';
+
 export default function Contact({ aboutData }: ContactProps) {
   const [formData, setFormData] = useState({
     name: '',
+    phone: '',
     email: '',
+    topic: '' as Topic | '',
     message: '',
   });
 
+  const [topicOpen, setTopicOpen] = useState(false);
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -32,9 +78,16 @@ export default function Contact({ aboutData }: ContactProps) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const selectTopic = (value: Topic) => {
+    setFormData((prev) => ({ ...prev, topic: value }));
+    setTopicOpen(false);
+  };
+
+  const selectedTopic = TOPICS.find((t) => t.value === formData.topic);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.name || !formData.phone || !formData.email || !formData.topic || !formData.message) return;
 
     setStatus('submitting');
     try {
@@ -47,14 +100,13 @@ export default function Contact({ aboutData }: ContactProps) {
       const json = await res.json();
       if (json.success) {
         setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
+        setFormData({ name: '', phone: '', email: '', topic: '', message: '' });
 
-        // Trigger confetti for a premium feel
         confetti({
-          particleCount: 100,
-          spread: 70,
+          particleCount: 120,
+          spread: 80,
           origin: { y: 0.6 },
-          colors: ['#3b82f6', '#818cf8', '#60a5fa'],
+          colors: ['#3b82f6', '#818cf8', '#60a5fa', '#a78bfa'],
         });
       } else {
         setStatus('error');
@@ -67,10 +119,13 @@ export default function Contact({ aboutData }: ContactProps) {
     }
   };
 
+  const isDisabled = status === 'submitting' || status === 'success';
+
   return (
     <section id="contact" className="py-20 relative overflow-hidden">
-      {/* Decorative Glow */}
+      {/* Decorative Glows */}
       <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-indigo-500/5 rounded-full glow-blur -z-10" />
+      <div className="absolute top-1/3 left-0 w-64 h-64 bg-blue-500/5 rounded-full glow-blur -z-10" />
 
       <div className="max-w-6xl mx-auto px-6">
         {/* Section Header */}
@@ -87,7 +142,7 @@ export default function Contact({ aboutData }: ContactProps) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
+
           {/* Left panel: Info & Socials */}
           <div className="lg:col-span-5 flex flex-col gap-8">
             <div className="glass-panel p-8 rounded-3xl flex flex-col gap-6 shadow-md border border-card-border/80">
@@ -135,42 +190,38 @@ export default function Contact({ aboutData }: ContactProps) {
                 </div>
               </div>
 
+              {/* Topic quick-ref chips */}
+              <div className="flex flex-col gap-2 pt-4 border-t border-card-border/60">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-text-muted">I can help with</span>
+                <div className="flex flex-wrap gap-2">
+                  {TOPICS.map((t) => (
+                    <span
+                      key={t.value}
+                      className={`flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-1 rounded-full border border-card-border bg-card-bg ${t.color}`}
+                    >
+                      {t.icon}
+                      {t.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
               {/* Social Channels */}
-              <div className="flex items-center gap-3 pt-6 border-t border-card-border/60">
-                <a
-                  href={aboutData?.githubUrl || 'https://github.com'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300"
-                  aria-label="GitHub"
-                >
+              <div className="flex items-center gap-3 pt-4 border-t border-card-border/60">
+                <a href={aboutData?.githubUrl || 'https://github.com'} target="_blank" rel="noopener noreferrer"
+                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300" aria-label="GitHub">
                   <Github size={18} />
                 </a>
-                <a
-                  href={aboutData?.linkedinUrl || 'https://linkedin.com'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300"
-                  aria-label="LinkedIn"
-                >
+                <a href={aboutData?.linkedinUrl || 'https://linkedin.com'} target="_blank" rel="noopener noreferrer"
+                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300" aria-label="LinkedIn">
                   <Linkedin size={18} />
                 </a>
-                <a
-                  href={aboutData?.facebookUrl || 'https://facebook.com'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300"
-                  aria-label="Facebook"
-                >
+                <a href={aboutData?.facebookUrl || 'https://facebook.com'} target="_blank" rel="noopener noreferrer"
+                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300" aria-label="Facebook">
                   <Facebook size={18} />
                 </a>
-                <a
-                  href={aboutData?.twitterUrl || 'https://twitter.com'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300"
-                  aria-label="Twitter"
-                >
+                <a href={aboutData?.twitterUrl || 'https://twitter.com'} target="_blank" rel="noopener noreferrer"
+                  className="p-3 rounded-xl border border-card-border hover:border-primary-main hover:text-primary-main bg-card-bg hover:scale-105 transition-all duration-300" aria-label="Twitter">
                   <Twitter size={18} />
                 </a>
               </div>
@@ -180,30 +231,51 @@ export default function Contact({ aboutData }: ContactProps) {
           {/* Right panel: Contact Form */}
           <div className="lg:col-span-7">
             <div className="glass-panel p-8 rounded-3xl shadow-md border border-card-border/80">
-              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                
-                {/* Name */}
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="name" className="text-xs font-mono font-bold uppercase tracking-wider text-text-base">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="John Doe"
-                    disabled={status === 'submitting' || status === 'success'}
-                    className="px-4 py-3 rounded-xl border border-card-border bg-input-bg text-text-base focus:border-primary-main focus:outline-none transition-colors duration-200"
-                  />
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+                {/* Name + Phone — side by side on md+ */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Name */}
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="name" className="text-xs font-mono font-bold uppercase tracking-wider text-text-base">
+                      Full Name <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      placeholder="John Doe"
+                      disabled={isDisabled}
+                      className={inputClass}
+                    />
+                  </div>
+
+                  {/* Phone */}
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="phone" className="text-xs font-mono font-bold uppercase tracking-wider text-text-base">
+                      Phone Number <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      placeholder="+880 1xxx xxxxxx"
+                      disabled={isDisabled}
+                      className={inputClass}
+                    />
+                  </div>
                 </div>
 
                 {/* Email */}
                 <div className="flex flex-col gap-2">
                   <label htmlFor="email" className="text-xs font-mono font-bold uppercase tracking-wider text-text-base">
-                    Email Address
+                    Email Address <span className="text-red-400">*</span>
                   </label>
                   <input
                     type="email"
@@ -213,15 +285,72 @@ export default function Contact({ aboutData }: ContactProps) {
                     onChange={handleChange}
                     required
                     placeholder="john@example.com"
-                    disabled={status === 'submitting' || status === 'success'}
-                    className="px-4 py-3 rounded-xl border border-card-border bg-input-bg text-text-base focus:border-primary-main focus:outline-none transition-colors duration-200"
+                    disabled={isDisabled}
+                    className={inputClass}
                   />
+                </div>
+
+                {/* Topic Selector */}
+                <div className="flex flex-col gap-2 relative">
+                  <label className="text-xs font-mono font-bold uppercase tracking-wider text-text-base">
+                    Reason for Contact <span className="text-red-400">*</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => !isDisabled && setTopicOpen((o) => !o)}
+                    disabled={isDisabled}
+                    className={`${inputClass} flex items-center justify-between text-left ${
+                      !formData.topic ? 'text-text-muted/50' : ''
+                    } ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                  >
+                    <span className={`flex items-center gap-2 ${selectedTopic?.color}`}>
+                      {selectedTopic ? (
+                        <>
+                          {selectedTopic.icon}
+                          {selectedTopic.label}
+                        </>
+                      ) : (
+                        'Select a topic...'
+                      )}
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      className={`text-text-muted transition-transform duration-200 ${topicOpen ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+
+                  {/* Dropdown */}
+                  {topicOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute top-full mt-1 left-0 right-0 z-50 glass-panel border border-card-border rounded-2xl overflow-hidden shadow-xl"
+                    >
+                      {TOPICS.map((t) => (
+                        <button
+                          key={t.value}
+                          type="button"
+                          onClick={() => selectTopic(t.value)}
+                          className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left hover:bg-primary-main/10 transition-colors duration-150 ${
+                            formData.topic === t.value ? 'bg-primary-main/10' : ''
+                          } ${t.color}`}
+                        >
+                          {t.icon}
+                          <span className="text-text-base">{t.label}</span>
+                          {formData.topic === t.value && (
+                            <span className="ml-auto text-primary-main text-xs font-mono">✓</span>
+                          )}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
                 </div>
 
                 {/* Message */}
                 <div className="flex flex-col gap-2">
                   <label htmlFor="message" className="text-xs font-mono font-bold uppercase tracking-wider text-text-base">
-                    Message
+                    Message <span className="text-red-400">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -230,14 +359,14 @@ export default function Contact({ aboutData }: ContactProps) {
                     onChange={handleChange}
                     required
                     rows={5}
-                    placeholder="Write your thoughts..."
-                    disabled={status === 'submitting' || status === 'success'}
-                    className="px-4 py-3 rounded-xl border border-card-border bg-input-bg text-text-base focus:border-primary-main focus:outline-none transition-colors duration-200 resize-none"
+                    placeholder="Write your thoughts or questions here..."
+                    disabled={isDisabled}
+                    className={`${inputClass} resize-none`}
                   />
                 </div>
 
-                {/* Submit button / Status displays */}
-                {status === 'success' ? (
+                {/* Status Messages */}
+                {status === 'success' && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -246,7 +375,8 @@ export default function Contact({ aboutData }: ContactProps) {
                     <CheckCircle size={18} />
                     <span>Thank you! Your message has been sent successfully.</span>
                   </motion.div>
-                ) : status === 'error' ? (
+                )}
+                {status === 'error' && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -255,13 +385,14 @@ export default function Contact({ aboutData }: ContactProps) {
                     <AlertCircle size={18} />
                     <span>{errorMessage}</span>
                   </motion.div>
-                ) : null}
+                )}
 
+                {/* Submit */}
                 <button
                   type="submit"
-                  disabled={status === 'submitting' || status === 'success'}
+                  disabled={isDisabled}
                   className={`flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer ${
-                    (status === 'submitting' || status === 'success') && 'opacity-60 cursor-not-allowed'
+                    isDisabled && 'opacity-60 cursor-not-allowed'
                   }`}
                 >
                   <Send size={16} />
