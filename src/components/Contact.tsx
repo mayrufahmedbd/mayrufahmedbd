@@ -247,7 +247,7 @@ export default function Contact({ aboutData }: ContactProps) {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      placeholder="John Doe"
+                      placeholder="Enter Your Name"
                       disabled={isDisabled}
                       className={inputClass}
                     />
@@ -265,7 +265,7 @@ export default function Contact({ aboutData }: ContactProps) {
                       value={formData.phone}
                       onChange={handleChange}
                       required
-                      placeholder="+880 1xxx xxxxxx"
+                      placeholder="Enter Your Phone Number"
                       disabled={isDisabled}
                       className={inputClass}
                     />
@@ -284,7 +284,7 @@ export default function Contact({ aboutData }: ContactProps) {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="john@example.com"
+                    placeholder="Enter Your Email"
                     disabled={isDisabled}
                     className={inputClass}
                   />

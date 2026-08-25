@@ -16,10 +16,15 @@ export default function SecurityTerminal() {
     { text: 'Systems operational. Connection encrypted.', type: 'success' },
     { text: 'Type "help" to display available terminal commands.', type: 'output' },
   ]);
-  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (terminalContainerRef.current) {
+      terminalContainerRef.current.scrollTo({
+        top: terminalContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   }, [history]);
 
   const handleCommand = (e: React.FormEvent) => {
@@ -94,7 +99,7 @@ export default function SecurityTerminal() {
       </div>
 
       {/* Terminal Console Buffer */}
-      <div className="p-4 h-64 overflow-y-auto flex flex-col gap-2 scrollbar-none scroll-smooth">
+      <div ref={terminalContainerRef} className="p-4 h-64 overflow-y-auto flex flex-col gap-2 scrollbar-none scroll-smooth">
         {history.map((line, idx) => (
           <div
             key={idx}
@@ -111,7 +116,6 @@ export default function SecurityTerminal() {
             {line.text}
           </div>
         ))}
-        <div ref={terminalEndRef} />
       </div>
 
       {/* Terminal Interactive Input */}
@@ -124,7 +128,6 @@ export default function SecurityTerminal() {
           className="flex-grow bg-transparent text-emerald-400 focus:outline-none placeholder-emerald-800 font-mono caret-transparent w-full text-xs"
           placeholder="type a command..."
           autoComplete="off"
-          autoFocus
         />
         {/* custom blinking cursor */}
         <span className="w-1.5 h-3 bg-emerald-500 terminal-cursor shrink-0 -ml-12" style={{ transform: `translateX(${input.length * 7}px)` }} />
