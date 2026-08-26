@@ -37,7 +37,7 @@ export default function SecurityTerminal() {
     switch (cmd) {
       case 'help':
         newHistory.push({
-          text: 'Available Commands:\n  about    - Summary of who Mayruf is\n  skills   - Core technology & security stacks\n  contact  - Database linked contact details\n  clear    - Flush terminal console lines\n  matrix   - Trigger diagnostic overlay\n  mayruf    - about me in short',
+          text: 'Available Commands:\n  about    - Summary of who Mayruf is\n  skills   - Core technology & security stacks\n  contact  - Database linked contact details\n  clear    - Flush terminal console lines\n  matrix   - Trigger diagnostic overlay\n  mayruf    - about me in short\n  mayrufahmed    - about me in short\n  mayrufahmedbd    - about me in short\n  who    - check it out',
           type: 'success',
         });
         break;
