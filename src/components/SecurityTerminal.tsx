@@ -37,7 +37,7 @@ export default function SecurityTerminal() {
     switch (cmd) {
       case 'help':
         newHistory.push({
-          text: 'Available Commands:\n  about    - Summary of who Mayruf is\n  skills   - Core technology & security stacks\n  contact  - Database linked contact details\n  clear    - Flush terminal console lines\n  matrix   - Trigger diagnostic overlay',
+          text: 'Available Commands:\n  about    - Summary of who Mayruf is\n  skills   - Core technology & security stacks\n  contact  - Database linked contact details\n  clear    - Flush terminal console lines\n  matrix   - Trigger diagnostic overlay\n  mayruf    - about me in short',
           type: 'success',
         });
         break;
@@ -55,7 +55,31 @@ export default function SecurityTerminal() {
         break;
       case 'contact':
         newHistory.push({
-          text: 'Contact Gateways:\n  - Email: mayruf.ahmed@example.com (Editable in Admin)\n  - Phone: +880 1711 223344\n  - Address: Dhaka, Bangladesh\n  - Links: Navigate to /contact page for full submission form.',
+          text: 'Contact Gateways:\n  - Email: mayrufahmedbd@gmail.com\n  - Phone: +880 1342 397160\n  - Address: Sylhet, Bangladesh\n  - Links: Navigate to /contact page for full submission form.',
+          type: 'output',
+        });
+        break;
+      case 'mayruf':
+        newHistory.push({
+          text: 'Hello! Welcome to my portfulio.This is mayruf From a Sylhet A developer & Ethikal Hacking Learner. I love to learn new thinks. type "Contact" for geting my number and g-mail',
+          type: 'output',
+        });
+        break;
+      case 'mayrufahmed':
+        newHistory.push({
+          text: 'Hello! Welcome to my portfulio.This is mayruf From a Sylhet A developer & Ethikal Hacking Learner. I love to learn new thinks. type "Contact" for geting my number and g-mail',
+          type: 'output',
+        });
+        break;
+      case 'mayrufahmedbd':
+        newHistory.push({
+          text: 'Hello! Welcome to my portfulio.This is mayruf From a Sylhet A developer & Ethikal Hacking Learner. I love to learn new thinks. type "Contact" for geting my number and g-mail',
+          type: 'output',
+        });
+        break;
+      case 'who':
+        newHistory.push({
+          text: 'This is Mayruf Ahmed a developer from Sylhet. I want to be a CyberSecurity expart in future',
           type: 'output',
         });
         break;
