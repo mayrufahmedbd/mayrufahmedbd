@@ -190,7 +190,7 @@ export default function GallerySection({ data }: GallerySectionProps) {
                 {filteredImages.length > 1 && (
                   <button
                     onClick={(e) => { e.stopPropagation(); goPrev(); }}
-                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white border border-white/20 z-10 transition-colors cursor-pointer backdrop-blur-sm"
+                    className="hidden md:flex absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white border border-white/20 z-10 transition-colors cursor-pointer backdrop-blur-sm"
                   >
                     <ChevronLeft size={24} />
                   </button>
@@ -200,7 +200,7 @@ export default function GallerySection({ data }: GallerySectionProps) {
                 {filteredImages.length > 1 && (
                   <button
                     onClick={(e) => { e.stopPropagation(); goNext(); }}
-                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white border border-white/20 z-10 transition-colors cursor-pointer backdrop-blur-sm"
+                    className="hidden md:flex absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white border border-white/20 z-10 transition-colors cursor-pointer backdrop-blur-sm"
                   >
                     <ChevronRight size={24} />
                   </button>
