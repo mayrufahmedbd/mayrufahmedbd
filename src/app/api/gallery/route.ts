@@ -23,20 +23,36 @@ export async function POST(req: NextRequest) {
 
     await dbConnect();
     const body = await req.json();
-    const { title, category, imageUrl, order } = body;
+    if (Array.isArray(body)) {
+      const createdImages = [];
+      for (const item of body) {
+        if (!item.title || !item.category || !item.imageUrl) continue;
+        const img = await GalleryImage.create({
+          title: item.title,
+          category: item.category,
+          imageUrl: item.imageUrl,
+          order: item.order !== undefined ? Number(item.order) : 0,
+        });
+        createdImages.push(img);
+      }
+      return NextResponse.json({ success: true, data: createdImages, message: 'Gallery images added successfully' });
+    } else {
+      const { title, category, imageUrl, order } = body;
 
-    if (!title || !category || !imageUrl) {
-      return NextResponse.json({ success: false, message: 'Missing fields' }, { status: 400 });
+      if (!title || !category || !imageUrl) {
+        return NextResponse.json({ success: false, message: 'Missing fields' }, { status: 400 });
+      }
+
+      const image = await GalleryImage.create({
+        title,
+        category,
+        imageUrl,
+        order: order !== undefined ? Number(order) : 0,
+      });
+
+      return NextResponse.json({ success: true, data: image, message: 'Gallery image added successfully' });
     }
 
-    const image = await GalleryImage.create({
-      title,
-      category,
-      imageUrl,
-      order: order !== undefined ? Number(order) : 0,
-    });
-
-    return NextResponse.json({ success: true, data: image, message: 'Gallery image added successfully' });
   } catch (error: unknown) {
     console.error('Failed to create gallery image:', error);
     return NextResponse.json({ success: false, message: 'Failed to add gallery image' }, { status: 500 });

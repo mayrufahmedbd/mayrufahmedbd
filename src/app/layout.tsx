@@ -203,7 +203,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-bg-base text-text-base transition-colors duration-300">
+      <body suppressHydrationWarning className="min-h-full bg-bg-base text-text-base transition-colors duration-300">
         {/* JSON-LD Structured Data for Google Rich Results */}
         <script
           type="application/ld+json"

@@ -102,8 +102,14 @@ export default function AdminDashboard() {
   const [newGallery, setNewGallery] = useState({
     title: '',
     category: 'Profile',
-    imageUrl: '',
+    imageUrls: [] as string[],
   });
+
+  const [editingImage, setEditingImage] = useState<{
+    _id: string;
+    title: string;
+    category: string;
+  } | null>(null);
 
   const [uploadLoading, setUploadLoading] = useState(false);
 
@@ -252,6 +258,54 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleMultipleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, onSuccess: (urls: string[]) => void) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length === 0) return;
+
+    setUploadLoading(true);
+    const urls: string[] = [];
+    const failed: { name: string; error: string }[] = [];
+
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'mayrufahmedbd');
+
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
+          const data = await res.json();
+          if (data.success) {
+            urls.push(data.url);
+          } else {
+            failed.push({ name: file.name, error: data.message || 'Unknown error' });
+          }
+        } catch {
+          failed.push({ name: file.name, error: 'Network error' });
+        }
+      }
+
+      if (urls.length > 0) {
+        onSuccess(urls);
+      }
+
+      if (failed.length > 0) {
+        const failMsg = failed.map(f => `${f.name}: ${f.error}`).join('\n');
+        alert(`${urls.length} uploaded, ${failed.length} failed:\n${failMsg}`);
+      } else {
+        alert(urls.length + ' image(s) uploaded successfully!');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Upload failed due to network error');
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   // SKILLS Actions
   const handleAddSkill = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -372,15 +426,27 @@ export default function AdminDashboard() {
   const handleAddGalleryImage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      if (newGallery.imageUrls.length === 0) {
+        alert('Please upload at least one image');
+        return;
+      }
+      
+      const payload = newGallery.imageUrls.map(url => ({
+        title: newGallery.title,
+        category: newGallery.category,
+        imageUrl: url
+      }));
+
       const res = await fetch('/api/gallery', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newGallery),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (json.success) {
-        setNewGallery({ title: '', category: 'Profile', imageUrl: '' });
+        setNewGallery({ title: '', category: 'Profile', imageUrls: [] });
         refreshAllData();
+        alert('Gallery images added successfully!');
       }
     } catch (err) {
       console.error(err);
@@ -392,6 +458,27 @@ export default function AdminDashboard() {
     try {
       await fetch(`/api/gallery/${id}`, { method: 'DELETE' });
       refreshAllData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSaveGalleryImage = async () => {
+    if (!editingImage) return;
+    try {
+      const res = await fetch(`/api/gallery/${editingImage._id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editingImage.title,
+          category: editingImage.category,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setEditingImage(null);
+        refreshAllData();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -1200,30 +1287,49 @@ export default function AdminDashboard() {
                     <option value="Memories">Memories</option>
                   </select>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-mono uppercase text-gray-400">Image Asset URL</label>
+                <div className="flex flex-col gap-2 relative">
+                  <label className="text-xs font-mono uppercase text-gray-400">Image Asset URLs ({newGallery.imageUrls.length} added)</label>
                   <input
                     type="text"
-                    required
-                    value={newGallery.imageUrl}
-                    onChange={(e) => setNewGallery({ ...newGallery, imageUrl: e.target.value })}
+                    placeholder="Enter URL and press Enter..."
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const url = e.currentTarget.value.trim();
+                        if (url) {
+                          setNewGallery({ ...newGallery, imageUrls: [...newGallery.imageUrls, url] });
+                          e.currentTarget.value = '';
+                        }
+                      }
+                    }}
                     className="p-3 bg-gray-950 border border-gray-800 rounded-xl focus:border-blue-500 focus:outline-none"
                   />
+                  {newGallery.imageUrls.length > 0 && (
+                     <div className="flex flex-wrap gap-2 mt-2">
+                        {newGallery.imageUrls.map((url, i) => (
+                           <div key={i} className="text-[10px] bg-gray-800 px-2 py-1 rounded flex items-center justify-between">
+                              <span className="truncate max-w-[100px]">{url}</span>
+                              <button type="button" onClick={() => setNewGallery({...newGallery, imageUrls: newGallery.imageUrls.filter((_, idx) => idx !== i)})} className="ml-2 text-red-400">×</button>
+                           </div>
+                        ))}
+                     </div>
+                  )}
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mt-4">
                 <label className="cursor-pointer bg-gray-900 hover:bg-gray-800 text-xs px-4 py-2.5 rounded-lg border border-gray-850 flex items-center gap-2">
-                  <Upload size={14} /> Upload image to Cloudinary
+                  <Upload size={14} /> Upload multiple to Cloudinary
                   <input
                     type="file"
                     accept="image/*"
+                    multiple
                     className="hidden"
-                    onChange={(e) => handleImageUpload(e, (url) => setNewGallery({ ...newGallery, imageUrl: url }))}
+                    onChange={(e) => handleMultipleFileUpload(e, (urls) => setNewGallery({ ...newGallery, imageUrls: [...newGallery.imageUrls, ...urls] }))}
                   />
                 </label>
-                {newGallery.imageUrl && (
-                  <span className="text-[10px] text-green-500 font-mono">Image URL set successfully!</span>
+                {newGallery.imageUrls.length > 0 && (
+                  <span className="text-[10px] text-green-500 font-mono">{newGallery.imageUrls.length} image(s) ready!</span>
                 )}
               </div>
 
@@ -1243,13 +1349,61 @@ export default function AdminDashboard() {
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-3">
                     <span className="text-[9px] uppercase font-mono text-blue-400">{image.category}</span>
                     <h6 className="font-bold text-xs truncate leading-tight mt-1 text-white">{image.title}</h6>
-                    <button
-                      onClick={() => handleDeleteGalleryImage(image._id)}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-500/20 p-2 rounded-lg mt-2 cursor-pointer w-fit"
-                    >
-                      <Trash2 size={13} />
-                    </button>
+                    <div className="flex items-center gap-1 mt-2">
+                      <button
+                        onClick={() => setEditingImage({ _id: image._id, title: image.title, category: image.category })}
+                        className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 p-2 rounded-lg cursor-pointer"
+                        title="Edit image"
+                      >
+                        <Edit2 size={13} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteGalleryImage(image._id)}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/20 p-2 rounded-lg cursor-pointer"
+                        title="Delete image"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Inline Edit Overlay */}
+                  {editingImage?._id === image._id && (
+                    <div className="absolute inset-0 bg-black/90 z-10 flex flex-col justify-center p-4 gap-3">
+                      <label className="text-[9px] uppercase font-mono text-gray-400">Title</label>
+                      <input
+                        type="text"
+                        value={editingImage.title}
+                        onChange={(e) => setEditingImage({ ...editingImage, title: e.target.value })}
+                        className="p-2 bg-gray-950 border border-gray-800 rounded-lg text-xs text-white focus:border-blue-500 focus:outline-none"
+                      />
+                      <label className="text-[9px] uppercase font-mono text-gray-400">Category</label>
+                      <select
+                        value={editingImage.category}
+                        onChange={(e) => setEditingImage({ ...editingImage, category: e.target.value })}
+                        className="p-2 bg-gray-950 border border-gray-800 rounded-lg text-xs text-white focus:border-blue-500 focus:outline-none"
+                      >
+                        <option value="Profile">Profile</option>
+                        <option value="Football">Football</option>
+                        <option value="Banner Designs">Banner Designs</option>
+                        <option value="Memories">Memories</option>
+                      </select>
+                      <div className="flex items-center gap-2 mt-1">
+                        <button
+                          onClick={handleSaveGalleryImage}
+                          className="flex-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-[10px] font-semibold cursor-pointer flex items-center justify-center gap-1"
+                        >
+                          <Check size={11} /> Save
+                        </button>
+                        <button
+                          onClick={() => setEditingImage(null)}
+                          className="flex-1 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-lg text-[10px] font-semibold cursor-pointer"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Maximize2, X } from 'lucide-react';
+import { Maximize2, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 
 interface GalleryImageType {
@@ -27,6 +27,48 @@ export default function GallerySection({ data }: GallerySectionProps) {
       ? data
       : data.filter((img) => img.category === activeTab)
     : [];
+
+  const lightboxIndex = lightboxImage
+    ? filteredImages.findIndex((img) => img._id === lightboxImage._id)
+    : -1;
+
+  const goNext = useCallback(() => {
+    if (lightboxIndex < 0) return;
+    const next = (lightboxIndex + 1) % filteredImages.length;
+    setLightboxImage(filteredImages[next]);
+  }, [lightboxIndex, filteredImages]);
+
+  const goPrev = useCallback(() => {
+    if (lightboxIndex < 0) return;
+    const prev = (lightboxIndex - 1 + filteredImages.length) % filteredImages.length;
+    setLightboxImage(filteredImages[prev]);
+  }, [lightboxIndex, filteredImages]);
+
+  // Touch swipe support
+  const touchStartX = useRef<number>(0);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 50) {
+      if (dx > 0) goPrev();
+      else goNext();
+    }
+  };
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') goNext();
+      else if (e.key === 'ArrowLeft') goPrev();
+      else if (e.key === 'Escape') setLightboxImage(null);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [lightboxImage, goNext, goPrev]);
 
   return (
     <section id="gallery" className="py-20 relative overflow-hidden">
@@ -131,7 +173,11 @@ export default function GallerySection({ data }: GallerySectionProps) {
               className="relative max-w-5xl max-h-[80vh] w-full h-full flex flex-col items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative w-full h-full max-h-[70vh] flex items-center justify-center">
+              <div
+                className="relative w-full h-full max-h-[70vh] flex items-center justify-center"
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
+              >
                 <Image
                   src={lightboxImage.imageUrl}
                   alt={lightboxImage.title}
@@ -139,6 +185,26 @@ export default function GallerySection({ data }: GallerySectionProps) {
                   sizes="100vw"
                   className="object-contain"
                 />
+
+                {/* Left Arrow */}
+                {filteredImages.length > 1 && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                    className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white border border-white/20 z-10 transition-colors cursor-pointer backdrop-blur-sm"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                )}
+
+                {/* Right Arrow */}
+                {filteredImages.length > 1 && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goNext(); }}
+                    className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/50 hover:bg-black/70 text-white border border-white/20 z-10 transition-colors cursor-pointer backdrop-blur-sm"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                )}
               </div>
 
               {/* Description bar */}
@@ -147,6 +213,11 @@ export default function GallerySection({ data }: GallerySectionProps) {
                   {lightboxImage.category}
                 </span>
                 <h3 className="text-lg font-bold mt-2">{lightboxImage.title}</h3>
+                {filteredImages.length > 1 && (
+                  <p className="text-[10px] text-gray-400 mt-2 font-mono">
+                    {lightboxIndex + 1} / {filteredImages.length} &mdash; Use ← → arrows to navigate
+                  </p>
+                )}
               </div>
             </motion.div>
           </motion.div>
