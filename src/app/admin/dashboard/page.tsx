@@ -539,8 +539,16 @@ export default function AdminDashboard() {
       {/* SIDEBAR NAVIGATION */}
       <aside className="w-full md:w-64 bg-[#090d16] border-r border-gray-900 p-6 flex flex-col justify-between shrink-0">
         <div className="flex flex-col gap-8">
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="text-blue-500" size={24} />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center p-1 shrink-0 shadow-sm">
+              <Image 
+                src="/black-logo.png" 
+                alt="Logo" 
+                width={24} 
+                height={24} 
+                className="w-full h-full object-contain" 
+              />
+            </div>
             <span className="font-bold tracking-wider font-mono">DASHBOARD</span>
           </div>
 

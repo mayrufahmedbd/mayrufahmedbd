@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ShieldCheck, User, Lock, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -88,8 +89,14 @@ export default function AdminLoginPage() {
         className="w-full max-w-md glass-panel p-8 rounded-3xl border border-gray-800 shadow-2xl relative z-10"
       >
         <div className="flex flex-col items-center gap-2 mb-8 text-center">
-          <div className="p-3.5 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-2xl">
-            <ShieldCheck size={28} />
+          <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center p-2.5 shadow-lg border border-gray-100">
+            <Image 
+              src="/black-logo.png" 
+              alt="Logo" 
+              width={36} 
+              height={36} 
+              className="w-9 h-9 object-contain" 
+            />
           </div>
           <h1 className="text-2xl font-bold tracking-tight mt-2">Admin Security Gate</h1>
           <p className="text-xs text-gray-400 font-mono uppercase tracking-widest">Authorized Access Only</p>

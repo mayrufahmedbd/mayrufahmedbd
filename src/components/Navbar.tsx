@@ -60,11 +60,11 @@ export default function Navbar() {
           {/* Logo / Name */}
           <Link href="/" className="text-xl font-bold tracking-wider flex items-center gap-2">
             <Image 
-              src={theme === 'dark' ? "/logo.png" : "/black-logo.png"} 
+              src="/logo.png" 
               alt="Logo" 
               width={32} 
               height={32} 
-              className="w-8 h-8 object-contain transition-all duration-300" 
+              className="w-8 h-8 object-contain transition-all duration-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]" 
             />
             {/* <span className="bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent whitespace-nowrap">
               Mayruf Ahmed
