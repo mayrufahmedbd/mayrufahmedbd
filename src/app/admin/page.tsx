@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, User, Lock, AlertCircle, RefreshCw } from 'lucide-react';
+import { User, Lock, AlertCircle, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';

@@ -1381,14 +1381,14 @@ export default function AdminDashboard() {
                       <label className="text-[9px] uppercase font-mono text-gray-400">Title</label>
                       <input
                         type="text"
-                        value={editingImage.title}
-                        onChange={(e) => setEditingImage({ ...editingImage, title: e.target.value })}
+                        value={editingImage?.title ?? ''}
+                        onChange={(e) => setEditingImage((prev) => prev ? ({ ...prev, title: e.target.value }) : null)}
                         className="p-2 bg-gray-950 border border-gray-800 rounded-lg text-xs text-white focus:border-blue-500 focus:outline-none"
                       />
                       <label className="text-[9px] uppercase font-mono text-gray-400">Category</label>
                       <select
-                        value={editingImage.category}
-                        onChange={(e) => setEditingImage({ ...editingImage, category: e.target.value })}
+                        value={editingImage?.category ?? 'Profile'}
+                        onChange={(e) => setEditingImage((prev) => prev ? ({ ...prev, category: e.target.value }) : null)}
                         className="p-2 bg-gray-950 border border-gray-800 rounded-lg text-xs text-white focus:border-blue-500 focus:outline-none"
                       >
                         <option value="Profile">Profile</option>
